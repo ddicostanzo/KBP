@@ -2,27 +2,27 @@ import pydicom
 import os
 import numpy as np
 import tensorflow as tf
-from Image import Image
-from Study import Study
+from Image import image
+from Study import study
 
-class Series:
-    def __init__(self, study):
+class series:
+    def __init__(self, study: study, _images: list):
         super().__init__()
         
         self._study = study
         self._patient = study._patient
-        self.Images = ParseImages(_patient._dcmlist)
-        self.NumberOfImages = len(self.Images)
+        self.series_images = _images
+        self.number_of_images = len(self.series_images)
         self.FrameOfReferenceUID = GetFORUID()
         
-        self.CTs = []
-        self.PETs = []
-        self.MRIs = []
-        self.RTPlans = []
-        self.RTStructs = []
-        self.RTDoses = []
-        self.RTImages = []
-        self.Registrations = []
+        # self.CTs = []
+        # self.PETs = []
+        # self.MRIs = []
+        # self.RTPlans = []
+        # self.RTStructs = []
+        # self.RTDoses = []
+        # self.RTImages = []
+        # self.Registrations = []
         
     
     
@@ -33,11 +33,11 @@ class Series:
         
     def GetFORUID(self, dcm):
         try:
-            print(dcm[0x00200052].value)
+            return dcm[0x00200052].value
         except:
             b_uid = dcm.get_item(0x30060010)[0].get_item(0x00200052).value
             uid = UID(b_uid.decode('ASCII')) 
-            print(uid)
+            return uid
      
     def SetCTScan(self, path):
         CT = CTScan(path)

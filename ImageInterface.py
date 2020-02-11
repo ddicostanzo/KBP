@@ -1,5 +1,5 @@
 import pydicom
-from Patient import Patient, Study, Series
+from Patient import patient, study, series
 from DicomImageType import DicomImageType
 
 class Image:

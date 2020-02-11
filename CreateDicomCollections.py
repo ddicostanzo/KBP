@@ -6,7 +6,7 @@ from pydicom.uid import UID
 from Patient import patient
 
 class DICOMCollection:
-    def __init__(self, path):
+    def __init__(self, path: str):
         super().__init__()
         
         self.__read_dir = path

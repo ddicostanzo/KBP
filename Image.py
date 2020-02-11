@@ -1,7 +1,7 @@
 import pydicom
-from Patient import Patient, Study, Series
+from Patient import patient, study, series
 
-class Image:
+class smage:
     def __init__(self, dcm):
         super().__init__()
         
