@@ -5,4 +5,5 @@ class DicomImageType(Enum):
     RTPlan = 4
     RTStruct = 5
     Registration = 6
+    Unknown = 99
     

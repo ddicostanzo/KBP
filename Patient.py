@@ -1,29 +1,24 @@
 import pydicom
 import os
 from Study import Study, Series, Image
+from CreateDicomCollections import DICOMCollection
 
-class Patient:
-    def __init__(self,path):
+class patient:
+    def __init__(self, mrn, collection: DICOMCollection):
         super().__init__()
         
-        self._dcmlist = self.BuildDICOMList(path)
-        self.Studies = self.GetStudiesUIDs()
+        self.__collection = collection
+        self.mrn = mrn
+        self.study_uids = collection.study_uid_set
+        self.series_uids = collection.series_uid_set
+        self.raw_images = collection.raw_image_set
+        self.image_uids = collection.image_uid_set
+        self.studies = []
         
-    def BuildDICOMList(self,path):
-        _dcmlist = []
-        for root, dirs, files in os.walk(path):
-            for f in files:
-                _root_dcm = os.path.join(root, dcm)
-                dcm = pydicom.read_file(_root_dcm)
-                _dcmlist.append(dcm)
-        return _dcmlist
-                
-    def GetStudiesUIDs(self):
-        studies = []
-        for d in self._dcmlist:
-            studies.append(d.StudyInstanceUID)
-        return set(studies)          
-    
-    
+        
+    def create_patient_studies(self):
+        for st in self.__collection.study_uid_set:
+            
+        
         
         

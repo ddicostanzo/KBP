@@ -9,7 +9,9 @@ class Image:
         self.SOPInstanceUID = dcm.SOPInstanceUID
         self.FrameOfReferenceUID = dcm.FrameOfReferenceUID
         self.ImageType = SetDicomImageType(dcm)
-        
+        self.Series = Series()
+        self.Study = Study()
+        self.Patient = Patient()
         
     def SetDicomImageType(self, dcm):
         _modality = dcm.Modality
@@ -30,6 +32,6 @@ class Image:
         elif dcm.Modality == 'CT':
             return DicomImageType.Image
         else:
-            return DicomImageType.Image
+            return DicomImageType.Unknown
         
   
