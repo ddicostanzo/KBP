@@ -1,7 +1,6 @@
 import pydicom
-from Patient import patient, study, series
 
-class smage:
+class image:
     def __init__(self, dcm):
         super().__init__()
         
@@ -36,7 +35,7 @@ class smage:
         self.Thickness = slice.SliceThickness
         
         
-        def SetRTStruct(self, dcm):
+    def SetRTStruct(self, dcm):
         try:
             print(dcm[0x00200052].value)
         except:
@@ -86,23 +85,23 @@ class smage:
     
     
     def GetRTStruct(self, dcm):
-    
+        pass
     def GetCTScan(self, path):
-        
+        pass
     def GetPETScan(self, path):
-        
+        pass
     def GetMRIScan(self, path):
-        
+        pass
     def GetRTPlan(self, dcm):
-    
+        pass
     def GetRTStruct(self, dcm):
-        
+        pass
     def GetRTDose(self, dcm):
-        
+        pass
     def GetRTImage(self, dcm):
-        
+        pass
     def GetRegistration(self, dcm):
-    
+        pass
 
         
     def CreateTensorFromPixels(self):

@@ -1,4 +1,3 @@
-import
 import tkinter as tk
 from tkinter import filedialog
 from CreateDicomCollections import DICOMCollection
@@ -8,5 +7,6 @@ root.withdraw()
 
 read_directory = filedialog.askdirectory()
 
-collection = DICOMCollection()
-collection.CreateDICOMCollections(read_directory)
+collection = DICOMCollection(read_directory)
+collection.GenerateFullCollection()
+print(collection.patients)

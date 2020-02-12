@@ -1,19 +1,22 @@
 import pydicom
+from pydicom.uid import UID
 import os
 import numpy as np
 import tensorflow as tf
 from Image import image
-from Study import study
+from DicomImageType import DicomImageType
 
 class series:
-    def __init__(self, study: study, _images: list):
+    def __init__(self, _images: dict, study):
         super().__init__()
         
         self._study = study
         self._patient = study._patient
         self.series_images = _images
         self.number_of_images = len(self.series_images)
-        self.FrameOfReferenceUID = GetFORUID()
+        _dcm = pydicom.read_file(list(_images.keys())[0])
+        self.FrameOfReferenceUID = self.GetFORUID(_dcm)
+        self.series_type = self.SetDicomImageType(_dcm)
         
         # self.CTs = []
         # self.PETs = []
@@ -24,7 +27,26 @@ class series:
         # self.RTImages = []
         # self.Registrations = []
         
-    
+    def SetDicomImageType(self, dcm):
+        _modality = dcm.Modality
+        if dcm.Modality == 'RTSTRUCT':
+            return DicomImageType.RTStruct
+        elif dcm.Modality == 'MR':
+            return DicomImageType.Image
+        elif dcm.Modality == 'PT':
+            return DicomImageType.Image
+        elif dcm.Modality == 'RTPLAN':
+            return DicomImageType.RTPlan
+        elif dcm.Modality == 'RTIMAGE':
+            return DicomImageType.RTImage
+        elif dcm.Modality == 'RTDOSE':
+            return DicomImageType.RTDose
+        elif dcm.Modality == 'REG':
+            return DicomImageType.Registration
+        elif dcm.Modality == 'CT':
+            return DicomImageType.Image
+        else:
+            return DicomImageType.Unknown
     
     def ParseImages(self, imgs):
         for i in imgs:
@@ -81,23 +103,23 @@ class series:
     
     
     def GetRTStruct(self, dcm):
-    
+        pass
     def GetCTScan(self, path):
-        
+        pass
     def GetPETScan(self, path):
-        
+        pass
     def GetMRIScan(self, path):
-        
+        pass
     def GetRTPlan(self, dcm):
-    
+        pass
     def GetRTStruct(self, dcm):
-        
+        pass
     def GetRTDose(self, dcm):
-        
+        pass
     def GetRTImage(self, dcm):
-        
+        pass
     def GetRegistration(self, dcm):
-    
+        pass
 
         
     def CreateTensorFromPixels(self):

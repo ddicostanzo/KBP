@@ -1,3 +1,4 @@
+from enum import Enum
 class DicomImageType(Enum):
     Image = 1
     RTDose = 2

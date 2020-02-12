@@ -14,10 +14,10 @@ class DICOMCollection:
         self.study_uid_set = set()
         self.series_uid_set = set()
         self.image_uid_set = set()
-        self.raw_image_set = set()
+        self.raw_image_dict = {}
         self.patients = []
         
-    def GenerateFullCollection():
+    def GenerateFullCollection(self):
         self.__CreateDICOMCollections(self.__read_dir)
         self.__CreatePatients()
     
@@ -25,16 +25,16 @@ class DICOMCollection:
         for root, dirs, files in os.walk(path):
             for f in files:
                 dcm = pydicom.read_file(os.path.join(root,f))
-                self.patient_set.add(dcm.PatientID)
-                self.study_set.add(dcm.StudyInstanceUID)
-                self.series_set.add(dcm.SeriesInstanceUID)
+                self.patient_id_set.add(dcm.PatientID)
+                self.study_uid_set.add(dcm.StudyInstanceUID)
+                self.series_uid_set.add(dcm.SeriesInstanceUID)
                 self.image_uid_set.add(dcm.SOPInstanceUID)
-                self.image_set.add(dcm)
+                self.raw_image_dict[os.path.join(root,f)] = dcm.StudyInstanceUID, dcm.SeriesInstanceUID, dcm.SOPInstanceUID
 
     
     def __CreatePatients(self):
         for p in self.patient_id_set:
-            pat = patient(patient_id=p, dicom_collection=self)
+            pat = patient(p, self)
             self.patients.append(pat)
             
             

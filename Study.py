@@ -1,24 +1,23 @@
 import pydicom
 import os
-from Patient import patient
-from Series import series, image
+from Series import series
 
 class study:
-    def __init__(self, patient: patient, study_uid: str, images: set):
+    def __init__(self, study_uid: str, images: dict, patient):
         super().__init__()
         self._patient = patient
         self.__study_uids = patient.study_uids
-        self.series_uids = [uid.SeriesInstanceUID for uid in images if uid.StudyInstanceUID == study_uid]
-        self.image_uids = [i.SOPInstanceUID for i in images]
+        self.series_uids = set([v[1] for k,v in images.items()])
+        self.image_uids = set([v[2] for k,v in images.items()])
         self.study_images = images
         self.study_uid = study_uid
         self.series = []
         self.create_series_for_study();
-        
+    
     def create_series_for_study(self):
         for s in self.series_uids:
-            img = [i for i in self.study_images if i.SeriesInstanceUID == s]
-            _series = series(self, img)
+            imgs = {k:v for k,v in self.study_images.items() if v[1] == s}
+            _series = series(imgs, self)
             self.series.append(_series)
             
         
