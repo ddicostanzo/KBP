@@ -1,10 +1,12 @@
 from enum import Enum
 class DicomImageType(Enum):
-    Image = 1
-    RTDose = 2
-    RTImage = 3
-    RTPlan = 4
-    RTStruct = 5
-    Registration = 6
-    Unknown = 99
-    
+    CT = 1
+    RTDOSE = 2
+    RTIMAGE = 3
+    RTPLAN = 4
+    RTSTRUCT = 5
+    REG = 6
+    MR = 7
+    PT = 8
+    UNKNOWN = 99
+  

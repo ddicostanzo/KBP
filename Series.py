@@ -5,18 +5,25 @@ import numpy as np
 import tensorflow as tf
 from Image import image
 from DicomImageType import DicomImageType
+from FileUID import file_uid
 
 class series:
-    def __init__(self, _images: dict, study):
+    def __init__(self, _images: list, study):
         super().__init__()
+        
+        self.__image_methods = self.__create_dict_of_image_methods()
         
         self._study = study
         self._patient = study._patient
-        self.series_images = _images
-        self.number_of_images = len(self.series_images)
-        _dcm = pydicom.read_file(list(_images.keys())[0])
+        self.series_files = _images
+        self.number_of_images = len(self.series_files)
+        _dcm = pydicom.read_file(_images[0].file_path)
         self.FrameOfReferenceUID = self.GetFORUID(_dcm)
-        self.series_type = self.SetDicomImageType(_dcm)
+        self.series_modality = _dcm.Modality
+        _dcm = None
+        #self.series_images = create_images_for_series()
+        self.__image_parsing_method = self.__image_methods[self.series_modality]
+        self.__image_parsing_method(self.series_files)
         
         # self.CTs = []
         # self.PETs = []
@@ -27,30 +34,47 @@ class series:
         # self.RTImages = []
         # self.Registrations = []
         
+    def __create_dict_of_image_methods(self):
+        methods = {}
+        methods['CT'] = self.SetCTScan
+        methods['REG'] = self.SetRegistration
+        methods['RTDOSE'] = self.SetRTDose
+        methods['RTIMAGE'] = self.SetRTImage
+        methods['RTPLAN'] = self.SetRTPlan
+        methods['RTSTRUCT'] = self.SetRTStruct
+        methods['MR'] = self.SetMRIScan
+        methods['PT'] = self.SetPETScan
+        return methods
+    
+    
+        
     def SetDicomImageType(self, dcm):
         _modality = dcm.Modality
         if dcm.Modality == 'RTSTRUCT':
-            return DicomImageType.RTStruct
+            return DicomImageType.RTSTRUCT
         elif dcm.Modality == 'MR':
-            return DicomImageType.Image
+            return DicomImageType.MR
         elif dcm.Modality == 'PT':
-            return DicomImageType.Image
+            return DicomImageType.PT
         elif dcm.Modality == 'RTPLAN':
-            return DicomImageType.RTPlan
+            return DicomImageType.RTPLAN
         elif dcm.Modality == 'RTIMAGE':
-            return DicomImageType.RTImage
+            return DicomImageType.RTIMAGE
         elif dcm.Modality == 'RTDOSE':
-            return DicomImageType.RTDose
+            return DicomImageType.RTDOSE
         elif dcm.Modality == 'REG':
-            return DicomImageType.Registration
+            return DicomImageType.REG
         elif dcm.Modality == 'CT':
-            return DicomImageType.Image
+            return DicomImageType.CT
         else:
             return DicomImageType.Unknown
     
-    def ParseImages(self, imgs):
-        for i in imgs:
-            img = Image(i)
+    def create_images_for_series(self):
+        pass
+        #images = []
+        #for i in self.series_files:
+            
+        
             
         
     def GetFORUID(self, dcm):
@@ -61,45 +85,29 @@ class series:
             uid = UID(b_uid.decode('ASCII')) 
             return uid
      
-    def SetCTScan(self, path):
-        CT = CTScan(path)
-        if not(CT in self.CTs):
-            self.CTs.append(CT)
+    def SetCTScan(self):
+        pass
+                
+    def SetPETScan(self):
+        pass
             
-    def SetPETScan(self, path):
-        PT = PTScan(path)
-        if not(PT in self.PETs):
-            self.PETs.append(PT)
+    def SetMRIScan(self):
+        pass
             
-    def SetMRIScan(self, path):
-        MRI = MRIScan(path)
-        if not(MRI in self.MRIs):
-            self.MRIs.append(MRI)
+    def SetRTPlan(self):
+        pass
             
-    def SetRTPlan(self, dcm):
-        plan = RTPlan(dcm)
-        if not(plan in self.RTPlans):
-            self.RTPlans.append(plan)
+    def SetRTStruct(self):
+        pass
             
-    def SetRTStruct(self, dcm):
-        rtstruct = RTStruct(dcm)
-        if not(rtstruct in self.RTStructs):
-            self.RTStructs.append(rtstruct)
-            
-    def SetRTDose(self, dcm):
-        dose = RTDose(dcm)
-        if not(dose in self.RTDoses):
-            self.RTDoses.append(dose)  
+    def SetRTDose(self):
+        pass
               
-    def SetRTImage(self, dcm):
-        img = RTImage(dcm)
-        if not(img in self.RTImages):
-            self.RTImages.append(img)   
+    def SetRTImage(self):
+        pass  
              
-    def SetRegistration(self, dcm):
-        reg = Registration(dcm)
-        if not(dcm in self.Registrations):
-            self.Registrations.append(reg)
+    def SetRegistration(self):
+        pass
     
     
     def GetRTStruct(self, dcm):

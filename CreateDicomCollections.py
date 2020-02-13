@@ -1,9 +1,9 @@
-#from CTDataClass import CTData
-#from CTScanClass import CTScan
 import os
 import pydicom
 from pydicom.uid import UID
 from Patient import patient
+from FileUID import file_uid
+
 
 class DICOMCollection:
     def __init__(self, path: str):
@@ -14,7 +14,7 @@ class DICOMCollection:
         self.study_uid_set = set()
         self.series_uid_set = set()
         self.image_uid_set = set()
-        self.raw_image_dict = {}
+        self.raw_image_list = []
         self.patients = []
         
     def GenerateFullCollection(self):
@@ -29,7 +29,7 @@ class DICOMCollection:
                 self.study_uid_set.add(dcm.StudyInstanceUID)
                 self.series_uid_set.add(dcm.SeriesInstanceUID)
                 self.image_uid_set.add(dcm.SOPInstanceUID)
-                self.raw_image_dict[os.path.join(root,f)] = dcm.StudyInstanceUID, dcm.SeriesInstanceUID, dcm.SOPInstanceUID
+                self.raw_image_list.append(file_uid(os.path.join(root,f), dcm.StudyInstanceUID, dcm.SeriesInstanceUID, dcm.SOPInstanceUID))
 
     
     def __CreatePatients(self):
