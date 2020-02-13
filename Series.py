@@ -21,18 +21,16 @@ class series:
         self.FrameOfReferenceUID = self.GetFORUID(_dcm)
         self.series_modality = _dcm.Modality
         _dcm = None
-        #self.series_images = create_images_for_series()
         self.__image_parsing_method = self.__image_methods[self.series_modality]
-        self.__image_parsing_method(self.series_files)
+        self.__series_images = None
         
-        # self.CTs = []
-        # self.PETs = []
-        # self.MRIs = []
-        # self.RTPlans = []
-        # self.RTStructs = []
-        # self.RTDoses = []
-        # self.RTImages = []
-        # self.Registrations = []
+    def GetFORUID(self, dcm):
+        try:
+            return dcm[0x00200052].value
+        except:
+            b_uid = dcm.get_item(0x30060010)[0].get_item(0x00200052).value
+            uid = UID(b_uid.decode('ASCII')) 
+            return uid
         
     def __create_dict_of_image_methods(self):
         methods = {}
@@ -46,8 +44,6 @@ class series:
         methods['PT'] = self.SetPETScan
         return methods
     
-    
-        
     def SetDicomImageType(self, dcm):
         _modality = dcm.Modality
         if dcm.Modality == 'RTSTRUCT':
@@ -69,30 +65,29 @@ class series:
         else:
             return DicomImageType.Unknown
     
-    def create_images_for_series(self):
-        pass
-        #images = []
-        #for i in self.series_files:
-            
+    def get_series_images(self):
+        if self.__series_images == None:
+            self.__series_images = self.create_series_images()
+        return self.__series_images
         
-            
         
-    def GetFORUID(self, dcm):
-        try:
-            return dcm[0x00200052].value
-        except:
-            b_uid = dcm.get_item(0x30060010)[0].get_item(0x00200052).value
-            uid = UID(b_uid.decode('ASCII')) 
-            return uid
-     
-    def SetCTScan(self):
-        pass
-                
-    def SetPETScan(self):
-        pass
+    def create_series_images(self):
+        imgs = []
+        for i in self.series_files:
+            imgs.append(self.__image_parsing_method(i.file_path))
+        return imgs
+    
+    def SetCTScan(self, img: str):
+        image = image(img)
+        return image 
+                            
+    def SetPETScan(self, img: str):
+        image = image(img)
+        return image
             
-    def SetMRIScan(self):
-        pass
+    def SetMRIScan(self, img: str):
+        image = image(img)
+        return image
             
     def SetRTPlan(self):
         pass
@@ -108,31 +103,3 @@ class series:
              
     def SetRegistration(self):
         pass
-    
-    
-    def GetRTStruct(self, dcm):
-        pass
-    def GetCTScan(self, path):
-        pass
-    def GetPETScan(self, path):
-        pass
-    def GetMRIScan(self, path):
-        pass
-    def GetRTPlan(self, dcm):
-        pass
-    def GetRTStruct(self, dcm):
-        pass
-    def GetRTDose(self, dcm):
-        pass
-    def GetRTImage(self, dcm):
-        pass
-    def GetRegistration(self, dcm):
-        pass
-
-        
-    def CreateTensorFromPixels(self):
-        pixel_tensor = []
-        for s in range(len(self.Images)):
-            pixel_tensor.append(tf.convert_to_tensor(self.Images[s].PixelData))
-        return tf.convert_to_tensor(pixel_tensor)
-    
