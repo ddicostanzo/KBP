@@ -10,3 +10,12 @@ read_directory = filedialog.askdirectory()
 collection = DICOMCollection(read_directory)
 collection.GenerateFullCollection()
 print(collection.patients)
+
+
+
+
+# How to get CT data
+for st in collection.patients[0].studies:
+    for se in st.series_list:
+        if se.series_modality == 'CT':
+            se.get_series_images()

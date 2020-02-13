@@ -2,7 +2,7 @@ import pydicom
 import tensorflow as tf
 
 class image:
-    def __init__(self, file: path):
+    def __init__(self, file: str):
         super().__init__()
         
         slice = pydicom.read_file(file)
@@ -17,8 +17,8 @@ class image:
         self.location = slice.SliceLocation
         self.frame_of_reference_uid = slice.FrameOfReferenceUID
         self.thickness = slice.SliceThickness
-        self.image_orientation = slice.ImageOrientation
-        self.image_position = slice.ImagePosition
+        self.image_orientation = slice.ImageOrientationPatient
+        self.image_position = slice.ImagePositionPatient
         slice = None
         
     def CreateTensorFromPixels(self):

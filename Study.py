@@ -13,14 +13,14 @@ class study:
         self.image_uids = set([i.image_uid for i in images])
         self.study_images = images
         self.study_uid = study_uid
-        self.series = []
+        self.series_list = []
         self.create_series_for_study();
     
     def create_series_for_study(self):
         for s in self.series_uids:
             imgs = [i for i in self.study_images if i.series_uid == s]
             _series = series(imgs, self)
-            self.series.append(_series)
+            self.series_list.append(_series)
             
         
         

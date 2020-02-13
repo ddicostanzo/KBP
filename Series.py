@@ -78,16 +78,13 @@ class series:
         return imgs
     
     def SetCTScan(self, img: str):
-        image = image(img)
-        return image 
+        return image(img)
                             
     def SetPETScan(self, img: str):
-        image = image(img)
-        return image
+        return image(img)
             
     def SetMRIScan(self, img: str):
-        image = image(img)
-        return image
+        return image(img)
             
     def SetRTPlan(self):
         pass
