@@ -14,8 +14,8 @@ print(collection.patients)
 
 
 
-# How to get CT data
+# How to get data
 for st in collection.patients[0].studies:
     for se in st.series_list:
-        if se.series_modality == 'CT':
+        if se.series_modality == 'RTDOSE':
             se.get_series_images()

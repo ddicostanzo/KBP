@@ -27,6 +27,4 @@ class image:
             pixel_tensor.append(tf.convert_to_tensor(self.Slices[s].PixelData))
         return tf.convert_to_tensor(pixel_tensor)
     
-
-        
     

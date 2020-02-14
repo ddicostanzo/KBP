@@ -6,6 +6,7 @@ import tensorflow as tf
 from Image import image
 from DicomImageType import DicomImageType
 from FileUID import file_uid
+from RTDose import dose
 
 class series:
     def __init__(self, _images: list, study):
@@ -92,8 +93,8 @@ class series:
     def SetRTStruct(self):
         pass
             
-    def SetRTDose(self):
-        pass
+    def SetRTDose(self, img: str):
+        return dose(img)
               
     def SetRTImage(self):
         pass  
